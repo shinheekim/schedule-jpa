@@ -1,5 +1,6 @@
 package com.example.springjpa.comment.api;
 
+import com.example.springjpa.comment.api.dto.request.CommentUpdateRequest;
 import com.example.springjpa.comment.api.dto.response.CommentResponse;
 import com.example.springjpa.comment.api.dto.request.CommentSaveRequest;
 import com.example.springjpa.comment.application.CommentService;
@@ -30,4 +31,10 @@ public class CommentController {
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
+    @PutMapping("{commentId}")
+    public ResponseEntity<String> updateComment(@PathVariable("commentId") Long id,
+                                                @RequestBody @Valid CommentUpdateRequest request) {
+        commentService.update(id, request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

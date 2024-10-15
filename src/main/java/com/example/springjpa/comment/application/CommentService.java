@@ -1,5 +1,6 @@
 package com.example.springjpa.comment.application;
 
+import com.example.springjpa.comment.api.dto.request.CommentUpdateRequest;
 import com.example.springjpa.comment.api.dto.response.CommentResponse;
 import com.example.springjpa.comment.api.dto.request.CommentSaveRequest;
 import com.example.springjpa.comment.domain.Comment;
@@ -27,8 +28,7 @@ public class CommentService {
                 .orElseThrow(()-> new EntityNotFoundException("해당 유저 정보가 없습니다." + request.userId()));
 
         Schedule schedule = scheduleRepository.findById(request.scheduleId())
-                .orElseThrow(() -> new EntityNotFoundException("해당 일정 정보가 없습니다." + request.scheduleId()))
-                ;
+                .orElseThrow(() -> new EntityNotFoundException("해당 일정 정보가 없습니다." + request.scheduleId()));
         Comment comment = Comment.builder()
                 .content(request.content())
                 .user(user)
@@ -44,5 +44,14 @@ public class CommentService {
                 .stream()
                 .map(CommentResponse::from)
                 .toList();
+    }
+
+    public void update(Long id, CommentUpdateRequest request) {
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new EntityNotFoundException("해당 유저의 정보가 없습니다." + request.userId()));
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("해당 댓글 정보가 없습니다."+ id));
+        comment.update(request.content());
+        commentRepository.save(comment);
     }
 }

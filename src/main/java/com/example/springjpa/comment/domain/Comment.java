@@ -34,4 +34,10 @@ public class Comment extends Timestamped {
         this.schedule = schedule;
         this.user = user;
     }
+
+    public void update(String content) {
+        if (content != null && !content.isEmpty()) {
+            this.content = content;
+        }
+    }
 }
