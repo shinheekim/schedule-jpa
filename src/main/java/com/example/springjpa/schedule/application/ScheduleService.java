@@ -1,5 +1,6 @@
 package com.example.springjpa.schedule.application;
 
+import com.example.springjpa.schedule.api.dto.ScheduleUpdateRequest;
 import com.example.springjpa.schedule.api.dto.response.ScheduleResponse;
 import com.example.springjpa.schedule.api.dto.request.ScheduleSaveRequest;
 import com.example.springjpa.schedule.domain.Schedule;
@@ -9,6 +10,7 @@ import com.example.springjpa.schedule.domain.repository.UserScheduleRepository;
 import com.example.springjpa.user.domain.User;
 import com.example.springjpa.user.domain.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +40,12 @@ public class ScheduleService {
     public ScheduleResponse findOne(Long id) {
         Schedule schedule = findScheduleById(id);
         return ScheduleResponse.from(schedule);
+    }
+
+    public void update(Long id, ScheduleUpdateRequest request) {
+        Schedule schedule = findScheduleById(id);
+        schedule.update(request.title(), request.content());
+        scheduleRepository.save(schedule);
     }
 
     private Schedule findScheduleById(Long id) {

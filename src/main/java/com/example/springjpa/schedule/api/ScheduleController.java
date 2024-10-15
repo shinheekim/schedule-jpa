@@ -1,5 +1,6 @@
 package com.example.springjpa.schedule.api;
 
+import com.example.springjpa.schedule.api.dto.ScheduleUpdateRequest;
 import com.example.springjpa.schedule.api.dto.response.ScheduleResponse;
 import com.example.springjpa.schedule.api.dto.request.ScheduleSaveRequest;
 import com.example.springjpa.schedule.application.ScheduleService;
@@ -25,5 +26,12 @@ public class ScheduleController {
     public ResponseEntity<ScheduleResponse> findOneSchedule(@PathVariable("scheduleId") Long id) {
         ScheduleResponse response = scheduleService.findOne(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{scheduleId}")
+    public ResponseEntity<String> updateSchedule(@PathVariable("scheduleId") Long id,
+                                                 @RequestBody @Valid ScheduleUpdateRequest request) {
+        scheduleService.update(id, request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

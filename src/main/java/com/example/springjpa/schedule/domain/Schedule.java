@@ -35,4 +35,13 @@ public class Schedule extends Timestamped {
         this.title = title;
         this.content = content;
     }
+
+    public void update(String title, String content) {
+        if (title !=null && !title.isEmpty()) {
+            this.title = title;
+        }
+        if (content != null && !content.isEmpty()) {
+            this.content = content;
+        }
+    }
 }
