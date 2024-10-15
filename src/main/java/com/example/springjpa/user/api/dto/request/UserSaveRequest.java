@@ -1,12 +1,15 @@
-package com.example.springjpa.user.api.dto;
+package com.example.springjpa.user.api.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-public record UserUpdateRequest(
+public record UserSaveRequest(
         @Size(max = 5)
+        @NotBlank
         String name,
         @Pattern(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
+        @NotBlank
         String email
 ) {
 }

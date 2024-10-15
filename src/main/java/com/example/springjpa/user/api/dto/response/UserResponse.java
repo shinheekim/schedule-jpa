@@ -1,4 +1,4 @@
-package com.example.springjpa.user.api.dto;
+package com.example.springjpa.user.api.dto.response;
 
 import com.example.springjpa.user.domain.User;
 import lombok.Builder;

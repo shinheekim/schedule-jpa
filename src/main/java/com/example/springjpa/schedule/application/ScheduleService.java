@@ -1,7 +1,7 @@
 package com.example.springjpa.schedule.application;
 
-import com.example.springjpa.schedule.api.dto.ScheduleResponse;
-import com.example.springjpa.schedule.api.dto.ScheduleSaveRequest;
+import com.example.springjpa.schedule.api.dto.response.ScheduleResponse;
+import com.example.springjpa.schedule.api.dto.request.ScheduleSaveRequest;
 import com.example.springjpa.schedule.domain.Schedule;
 import com.example.springjpa.schedule.domain.UserSchedule;
 import com.example.springjpa.schedule.domain.repository.ScheduleRepository;

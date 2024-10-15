@@ -1,8 +1,8 @@
 package com.example.springjpa.user.api;
 
-import com.example.springjpa.user.api.dto.UserResponse;
-import com.example.springjpa.user.api.dto.UserSaveRequest;
-import com.example.springjpa.user.api.dto.UserUpdateRequest;
+import com.example.springjpa.user.api.dto.response.UserResponse;
+import com.example.springjpa.user.api.dto.request.UserSaveRequest;
+import com.example.springjpa.user.api.dto.request.UserUpdateRequest;
 import com.example.springjpa.user.application.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

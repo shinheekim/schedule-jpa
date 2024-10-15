@@ -1,7 +1,7 @@
 package com.example.springjpa.schedule.api;
 
-import com.example.springjpa.schedule.api.dto.ScheduleResponse;
-import com.example.springjpa.schedule.api.dto.ScheduleSaveRequest;
+import com.example.springjpa.schedule.api.dto.response.ScheduleResponse;
+import com.example.springjpa.schedule.api.dto.request.ScheduleSaveRequest;
 import com.example.springjpa.schedule.application.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

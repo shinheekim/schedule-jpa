@@ -1,4 +1,4 @@
-package com.example.springjpa.schedule.api.dto;
+package com.example.springjpa.schedule.api.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 

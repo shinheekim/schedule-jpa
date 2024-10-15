@@ -1,4 +1,4 @@
-package com.example.springjpa.schedule.api.dto;
+package com.example.springjpa.schedule.api.dto.response;
 
 import com.example.springjpa.schedule.domain.Schedule;
 import lombok.Builder;
