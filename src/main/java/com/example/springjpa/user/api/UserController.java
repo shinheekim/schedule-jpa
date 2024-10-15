@@ -2,6 +2,7 @@ package com.example.springjpa.user.api;
 
 import com.example.springjpa.user.api.dto.UserResponse;
 import com.example.springjpa.user.api.dto.UserSaveRequest;
+import com.example.springjpa.user.api.dto.UserUpdateRequest;
 import com.example.springjpa.user.application.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,15 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<UserResponse> findOneUser(@PathVariable("userId") Long userId) {
-        UserResponse response = userService.findOneUser(userId);
+    public ResponseEntity<UserResponse> findOneUser(@PathVariable("userId") Long id) {
+        UserResponse response = userService.findOneUser(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PatchMapping("/{userId}")
+    public ResponseEntity<String> updateUser(@PathVariable("userId") Long id,
+                                             @RequestBody(required = false) UserUpdateRequest request) {
+        userService.update(id, request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
