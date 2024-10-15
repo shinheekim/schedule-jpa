@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/schedule")
@@ -21,5 +19,11 @@ public class ScheduleController {
     public ResponseEntity<ScheduleResponse> createSchedule(@RequestBody @Valid ScheduleSaveRequest request) {  // 추후 토큰받아서 작성자 정보 넘기기
         ScheduleResponse response = scheduleService.create(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{scheduleId}")
+    public ResponseEntity<ScheduleResponse> findOneSchedule(@PathVariable("scheduleId") Long id) {
+        ScheduleResponse response = scheduleService.findOne(id);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

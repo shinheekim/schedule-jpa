@@ -8,6 +8,7 @@ import com.example.springjpa.schedule.domain.repository.ScheduleRepository;
 import com.example.springjpa.schedule.domain.repository.UserScheduleRepository;
 import com.example.springjpa.user.domain.User;
 import com.example.springjpa.user.domain.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +33,15 @@ public class ScheduleService {
         userScheduleRepository.save(userSchedule);
 
         return ScheduleResponse.from(schedule);
+    }
+
+    public ScheduleResponse findOne(Long id) {
+        Schedule schedule = findScheduleById(id);
+        return ScheduleResponse.from(schedule);
+    }
+
+    private Schedule findScheduleById(Long id) {
+        return scheduleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("해당 일정이 존재하지 않습니다."));
     }
 }
