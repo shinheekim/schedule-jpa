@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Records {
+public class UserSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "record_id")
@@ -24,8 +24,7 @@ public class Records {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Builder
-    public Records(Schedule schedule, User user) {
+    public UserSchedule(Schedule schedule, User user) {
         this.schedule = schedule;
         this.user = user;
     }

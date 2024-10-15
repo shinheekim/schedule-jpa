@@ -2,7 +2,7 @@ package com.example.springjpa.user.domain;
 
 import com.example.global.Timestamped;
 import com.example.springjpa.comment.domain.Comment;
-import com.example.springjpa.schedule.domain.Records;
+import com.example.springjpa.schedule.domain.UserSchedule;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +24,7 @@ public class User extends Timestamped {
     private String email;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Records> records = new ArrayList<>();
+    private List<UserSchedule> records = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();

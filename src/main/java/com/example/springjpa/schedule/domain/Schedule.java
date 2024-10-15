@@ -24,13 +24,14 @@ public class Schedule extends Timestamped {
     private String content;
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Records> records = new ArrayList<>();
+    private List<UserSchedule> records = new ArrayList<>();
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Schedule(String title, String content) {
+    public Schedule(Long id, String title, String content) {
+        this.id = id;
         this.title = title;
         this.content = content;
 
