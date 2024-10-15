@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,5 +19,11 @@ public class UserController {
     public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserSaveRequest request){
         UserResponse response = userService.create(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserResponse> findOneUser(@PathVariable("userId") Long userId) {
+        UserResponse response = userService.findOneUser(userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
