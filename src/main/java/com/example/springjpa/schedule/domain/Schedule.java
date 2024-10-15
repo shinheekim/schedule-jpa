@@ -24,7 +24,7 @@ public class Schedule extends Timestamped {
     private String content;
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserSchedule> records = new ArrayList<>();
+    private List<UserSchedule> userSchedules = new ArrayList<>();
 
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
