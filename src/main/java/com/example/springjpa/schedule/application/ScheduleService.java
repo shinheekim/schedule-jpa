@@ -19,7 +19,8 @@ public class ScheduleService {
     private final UserScheduleRepository userScheduleRepository;
 
     public ScheduleResponse create(ScheduleSaveRequest request) {
-        User user = userRepository.findById(request.userId()).orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
+        User user = userRepository.findById(request.userId())
+                .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
 
         Schedule schedule = Schedule.builder()
                 .title(request.title())

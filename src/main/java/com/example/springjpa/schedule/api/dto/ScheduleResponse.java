@@ -11,12 +11,15 @@ public record ScheduleResponse(
         String title,
         String content,
         LocalDateTime createAt,
-        LocalDateTime updateAt
+        LocalDateTime modifiedAt
 ) {
     public static ScheduleResponse from(Schedule schedule) {
         return ScheduleResponse.builder()
+                .id(schedule.getId())
                 .title(schedule.getTitle())
                 .content(schedule.getContent())
+                .createAt(schedule.getCreatedAt())
+                .modifiedAt(schedule.getModifiedAt())
                 .build();
     }
 }

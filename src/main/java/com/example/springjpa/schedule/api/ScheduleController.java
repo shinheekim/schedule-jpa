@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ScheduleController {
     private final ScheduleService scheduleService;
 
+    @PostMapping
     public ResponseEntity<?> createSchedule(@RequestBody @Valid ScheduleSaveRequest request) {  // 추후 토큰받아서 작성자 정보 넘기기
         ScheduleResponse response = scheduleService.create(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
