@@ -34,6 +34,5 @@ public class Schedule extends Timestamped {
         this.id = id;
         this.title = title;
         this.content = content;
-
     }
 }
