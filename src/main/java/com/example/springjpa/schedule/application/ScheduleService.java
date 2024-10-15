@@ -48,6 +48,11 @@ public class ScheduleService {
         scheduleRepository.save(schedule);
     }
 
+    public void delete(Long id) {
+        Schedule schedule = findScheduleById(id);
+        scheduleRepository.delete(schedule);
+    }
+
     private Schedule findScheduleById(Long id) {
         return scheduleRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("해당 일정이 존재하지 않습니다."));
