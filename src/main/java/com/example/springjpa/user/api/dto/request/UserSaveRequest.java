@@ -10,6 +10,8 @@ public record UserSaveRequest(
         String name,
         @Pattern(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
         @NotBlank
-        String email
+        String email,
+        @NotBlank
+        String password
 ) {
 }

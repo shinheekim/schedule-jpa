@@ -22,6 +22,7 @@ public class User extends Timestamped {
 
     private String name;
     private String email;
+    private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserSchedule> userSchedules = new ArrayList<>();
@@ -30,9 +31,10 @@ public class User extends Timestamped {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public User(String name, String email) {
+    public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
+        this.password = password;
     }
 
     public void update(String name, String email) {

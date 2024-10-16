@@ -24,6 +24,7 @@ public class UserSchedule {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Builder
     public UserSchedule(Schedule schedule, User user) {
         this.schedule = schedule;
         this.user = user;
