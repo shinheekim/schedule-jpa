@@ -8,7 +8,8 @@ public record UserSaveRequest(
         @Size(max = 5)
         @NotBlank
         String name,
-        @Pattern(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
+        String nickname,
+        @Pattern(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$", message = "이메일 형식이 아닙니다.")
         @NotBlank
         String email,
         @NotBlank

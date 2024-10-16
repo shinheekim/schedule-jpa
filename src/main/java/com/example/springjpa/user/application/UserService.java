@@ -1,8 +1,13 @@
 package com.example.springjpa.user.application;
 
+import com.example.springjpa.exception.ErrorCode;
+import com.example.springjpa.exception.NotFoundException;
+import com.example.springjpa.user.api.dto.request.UserLoginRequest;
+import com.example.springjpa.user.api.dto.response.UserLoginResponse;
 import com.example.springjpa.user.api.dto.response.UserResponse;
 import com.example.springjpa.user.api.dto.request.UserSaveRequest;
 import com.example.springjpa.user.api.dto.request.UserUpdateRequest;
+import com.example.springjpa.user.domain.Role;
 import com.example.springjpa.user.domain.User;
 import com.example.springjpa.user.domain.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -17,13 +22,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+//    private final TokenProvider tokenProvider;
 
     public UserResponse create(UserSaveRequest request) {
-        // 예외처리 - 만약 이미 있는 이메일이라면? => 이미 있는 이메일이라면서 예외처리
+        if (userRepository.existsByEmail(request.email())) {
+            throw new NotFoundException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        }
         User user = User.builder()
                 .name(request.name())
+                .nickname(request.nickname())
                 .email(request.email())
                 .password(passwordEncoder.encode(request.password()))
+                .role(Role.ROLE_USER)
                 .build();
         userRepository.save(user);
         return UserResponse.from(user);
