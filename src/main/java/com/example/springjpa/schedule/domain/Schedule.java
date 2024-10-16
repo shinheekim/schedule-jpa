@@ -2,6 +2,7 @@ package com.example.springjpa.schedule.domain;
 
 import com.example.global.Timestamped;
 import com.example.springjpa.comment.domain.Comment;
+import com.example.springjpa.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,6 +24,10 @@ public class Schedule extends Timestamped {
     private String title;
     private String content;
 
+    @ManyToOne
+    @JoinColumn(name = "creator_id", nullable = false)
+    private User creator;
+
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserSchedule> userSchedules = new ArrayList<>();
 
@@ -30,8 +35,9 @@ public class Schedule extends Timestamped {
     private List<Comment> comments = new ArrayList<>();
 
     @Builder
-    public Schedule(Long id, String title, String content) {
+    public Schedule(Long id, User creator, String title, String content) {
         this.id = id;
+        this.creator = creator;
         this.title = title;
         this.content = content;
     }

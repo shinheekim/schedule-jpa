@@ -1,6 +1,7 @@
 package com.example.springjpa.schedule.api;
 
 import com.example.springjpa.schedule.api.dto.ScheduleUpdateRequest;
+import com.example.springjpa.schedule.api.dto.request.AssignUsersRequest;
 import com.example.springjpa.schedule.api.dto.request.ScheduleSaveRequest;
 import com.example.springjpa.schedule.api.dto.response.ScheduleResponse;
 import com.example.springjpa.schedule.application.ScheduleService;
@@ -22,7 +23,7 @@ public class ScheduleController {
 
     @PostMapping
     public ResponseEntity<ScheduleResponse> createSchedule(@RequestBody @Valid ScheduleSaveRequest request) {
-        // 추후 토큰받아서 작성자 정보 넘기기
+        // 추후 토큰받아서 작성자 정보 넘기기 - @AuthenticationPrincipal UserDetail userDetail
         ScheduleResponse response = scheduleService.create(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -46,6 +47,14 @@ public class ScheduleController {
     public ResponseEntity<String> updateSchedule(@PathVariable("scheduleId") Long id,
                                                  @RequestBody @Valid ScheduleUpdateRequest request) {
         scheduleService.update(id, request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/assign/{scheduleId}")
+    public ResponseEntity<String> assignUsersToSchedule(@PathVariable("scheduleId") Long id,
+                                                        @RequestBody AssignUsersRequest request) {
+        // 유저 id도 입력받기.
+        scheduleService.assignUsersToSchedule(id, request.userIds());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

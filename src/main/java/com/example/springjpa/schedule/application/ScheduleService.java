@@ -16,6 +16,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -25,16 +28,17 @@ public class ScheduleService {
     private final UserScheduleRepository userScheduleRepository;
 
     public ScheduleResponse create(ScheduleSaveRequest request) {
-        User user = userRepository.findById(request.userId())
+        User creator = userRepository.findById(request.userId())
                 .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
 
         Schedule schedule = Schedule.builder()
                 .title(request.title())
                 .content(request.content())
+                .creator(creator)
                 .build();
         scheduleRepository.save(schedule);
 
-        UserSchedule userSchedule = new UserSchedule(schedule, user);
+        UserSchedule userSchedule = new UserSchedule(schedule, creator);
         userScheduleRepository.save(userSchedule);
 
         return ScheduleResponse.from(schedule);
@@ -55,6 +59,19 @@ public class ScheduleService {
         Schedule schedule = findScheduleById(id);
         schedule.update(request.title(), request.content());
         scheduleRepository.save(schedule);
+    }
+
+
+    public void assignUsersToSchedule(Long scheduleId, Set<Long> userIds) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 일정을 찾을 수 없습니다."));
+
+        Set<User> usersToAssign = new HashSet<>(userRepository.findAllById(userIds));
+
+        for (User user : usersToAssign) {
+            UserSchedule userSchedule = new UserSchedule(schedule, user);
+            userScheduleRepository.save(userSchedule);
+        }
     }
 
     public void delete(Long id) {
