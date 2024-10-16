@@ -2,8 +2,8 @@ package com.example.springjpa.user.application;
 
 import com.example.springjpa.exception.ErrorCode;
 import com.example.springjpa.exception.NotFoundException;
+import com.example.springjpa.global.jwt.TokenProvider;
 import com.example.springjpa.user.api.dto.request.UserLoginRequest;
-import com.example.springjpa.user.api.dto.response.UserLoginResponse;
 import com.example.springjpa.user.api.dto.response.UserResponse;
 import com.example.springjpa.user.api.dto.request.UserSaveRequest;
 import com.example.springjpa.user.api.dto.request.UserUpdateRequest;
@@ -11,6 +11,7 @@ import com.example.springjpa.user.domain.Role;
 import com.example.springjpa.user.domain.User;
 import com.example.springjpa.user.domain.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,12 +23,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-//    private final TokenProvider tokenProvider;
+    private final TokenProvider tokenProvider;
 
-    public UserResponse create(UserSaveRequest request) {
+    public UserResponse join(UserSaveRequest request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new NotFoundException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
         }
+
         User user = User.builder()
                 .name(request.name())
                 .nickname(request.nickname())
@@ -37,6 +39,16 @@ public class UserService {
                 .build();
         userRepository.save(user);
         return UserResponse.from(user);
+    }
+
+    public String loginAndToken(UserLoginRequest request) {
+        User user = userRepository.findByEmail(request.email()).orElseThrow(
+                () -> new IllegalArgumentException("등록된 사용자가 없습니다."));
+        if (passwordEncoder.matches(user.getPassword(), request.password())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        return tokenProvider.createToken(user.getName(), user.getRole());
+
     }
 
     public UserResponse findOneUser(Long id) {
