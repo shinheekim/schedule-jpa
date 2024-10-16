@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Builder
 public record UserResponse(
         String name,
+        String nickname,
         String email,
         LocalDateTime createAt,
         LocalDateTime modifiedAt
@@ -15,6 +16,7 @@ public record UserResponse(
     public static UserResponse from(User user) {
         return UserResponse.builder()
                 .name(user.getName())
+                .nickname(user.getNickname())
                 .email(user.getEmail())
                 .createAt(user.getCreatedAt())
                 .modifiedAt(user.getModifiedAt())

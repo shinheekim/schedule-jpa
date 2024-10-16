@@ -1,4 +1,4 @@
-package com.example.springjpa.exception;
+package com.example.springjpa.global.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

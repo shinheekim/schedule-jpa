@@ -1,4 +1,4 @@
-package com.example.springjpa.exception;
+package com.example.springjpa.global.exception;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

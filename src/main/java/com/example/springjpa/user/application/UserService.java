@@ -1,7 +1,7 @@
 package com.example.springjpa.user.application;
 
-import com.example.springjpa.exception.ErrorCode;
-import com.example.springjpa.exception.NotFoundException;
+import com.example.springjpa.global.exception.ErrorCode;
+import com.example.springjpa.global.exception.NotFoundException;
 import com.example.springjpa.global.jwt.TokenProvider;
 import com.example.springjpa.user.api.dto.request.UserLoginRequest;
 import com.example.springjpa.user.api.dto.response.UserResponse;
@@ -11,7 +11,6 @@ import com.example.springjpa.user.domain.Role;
 import com.example.springjpa.user.domain.User;
 import com.example.springjpa.user.domain.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
