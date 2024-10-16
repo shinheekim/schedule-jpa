@@ -1,4 +1,4 @@
-package com.example.springjpa.global;
+package com.example.springjpa.global.auth;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
