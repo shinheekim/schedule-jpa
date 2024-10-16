@@ -1,6 +1,6 @@
 package com.example.springjpa.schedule.domain;
 
-import com.example.global.Timestamped;
+import com.example.springjpa.global.Timestamped;
 import com.example.springjpa.comment.domain.Comment;
 import com.example.springjpa.user.domain.User;
 import jakarta.persistence.*;

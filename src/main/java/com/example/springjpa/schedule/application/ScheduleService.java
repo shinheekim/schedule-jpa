@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -45,9 +46,12 @@ public class ScheduleService {
     }
 
 
-    public Page<ScheduleResponse> findAllSchedules(Pageable pageable) {
-        return scheduleRepository.findAll(pageable)
-                .map(ScheduleResponse::from);
+    public List<ScheduleResponse> findAllSchedules(Pageable pageable) {
+        Page<Schedule> schedules = scheduleRepository.findAll(pageable);
+
+        return schedules.stream()
+                .map(ScheduleResponse::from)
+                .toList();
     }
 
     public ScheduleResponse findOne(Long id) {

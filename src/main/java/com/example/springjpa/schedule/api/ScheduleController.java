@@ -15,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/schedule")
@@ -29,11 +31,11 @@ public class ScheduleController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ScheduleResponse>> findAllSchedule(
+    public ResponseEntity<List<ScheduleResponse>> findAllSchedule(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
-        Page<ScheduleResponse> responses = scheduleService.findAllSchedules(pageable);
+        List<ScheduleResponse> responses = scheduleService.findAllSchedules(pageable);
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
