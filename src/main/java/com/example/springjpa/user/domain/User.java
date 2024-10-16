@@ -1,14 +1,13 @@
 package com.example.springjpa.user.domain;
 
-import com.example.springjpa.global.Timestamped;
 import com.example.springjpa.comment.domain.Comment;
+import com.example.springjpa.global.Timestamped;
 import com.example.springjpa.schedule.domain.UserSchedule;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;

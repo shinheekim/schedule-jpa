@@ -9,6 +9,10 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public enum ErrorCode {
     /**
+     * 401 UNAUTHORIZED
+     */
+
+    /**
      * 404 NOT FOUND
      */
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저가 없습니다."),

@@ -2,14 +2,13 @@ package com.example.springjpa.user.api;
 
 import com.example.springjpa.global.jwt.TokenProvider;
 import com.example.springjpa.user.api.dto.request.UserLoginRequest;
-import com.example.springjpa.user.api.dto.response.UserResponse;
 import com.example.springjpa.user.api.dto.request.UserSaveRequest;
 import com.example.springjpa.user.api.dto.request.UserUpdateRequest;
+import com.example.springjpa.user.api.dto.response.UserResponse;
 import com.example.springjpa.user.application.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.Token;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

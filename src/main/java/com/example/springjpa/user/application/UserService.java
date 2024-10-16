@@ -1,7 +1,9 @@
 package com.example.springjpa.user.application;
 
 import com.example.springjpa.global.exception.ErrorCode;
+import com.example.springjpa.global.exception.InvalidCredentialsException;
 import com.example.springjpa.global.exception.NotFoundException;
+import com.example.springjpa.global.exception.UserNotFoundException;
 import com.example.springjpa.global.jwt.TokenProvider;
 import com.example.springjpa.user.api.dto.request.UserLoginRequest;
 import com.example.springjpa.user.api.dto.response.UserResponse;
@@ -25,8 +27,8 @@ public class UserService {
     private final TokenProvider tokenProvider;
 
     public UserResponse join(UserSaveRequest request) {
-        if (userRepository.existsByEmail(request.email())) {
-            throw new NotFoundException(ErrorCode.USER_NOT_FOUND, ErrorCode.USER_NOT_FOUND.getMessage());
+        if (!userRepository.existsByEmail(request.email())) {
+            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage());
         }
 
         User user = User.builder()
@@ -42,12 +44,13 @@ public class UserService {
 
     public String loginAndToken(UserLoginRequest request) {
         User user = userRepository.findByEmail(request.email()).orElseThrow(
-                () -> new IllegalArgumentException("등록된 사용자가 없습니다."));
-        if (passwordEncoder.matches(user.getPassword(), request.password())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-        return tokenProvider.createToken(user.getName(), user.getRole());
+                () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new InvalidCredentialsException("비밀번호가 일치하지 않습니다.");
+        }
+
+        return tokenProvider.createToken(user.getName(), user.getRole());
     }
 
     public UserResponse findOneUser(Long id) {
