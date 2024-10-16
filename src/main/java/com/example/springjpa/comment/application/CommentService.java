@@ -54,4 +54,12 @@ public class CommentService {
         comment.update(request.content());
         commentRepository.save(comment);
     }
+
+    public void delete(Long id, Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("해당 유저의 정보가 없습니다." + userId));
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("해당 댓글 정보가 없습니다."+ id));
+        commentRepository.delete(comment);
+    }
 }
