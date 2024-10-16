@@ -1,11 +1,15 @@
 package com.example.springjpa.schedule.api;
 
 import com.example.springjpa.schedule.api.dto.ScheduleUpdateRequest;
-import com.example.springjpa.schedule.api.dto.response.ScheduleResponse;
 import com.example.springjpa.schedule.api.dto.request.ScheduleSaveRequest;
+import com.example.springjpa.schedule.api.dto.response.ScheduleResponse;
 import com.example.springjpa.schedule.application.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +21,19 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
 
     @PostMapping
-    public ResponseEntity<ScheduleResponse> createSchedule(@RequestBody @Valid ScheduleSaveRequest request) {  // 추후 토큰받아서 작성자 정보 넘기기
+    public ResponseEntity<ScheduleResponse> createSchedule(@RequestBody @Valid ScheduleSaveRequest request) {
+        // 추후 토큰받아서 작성자 정보 넘기기
         ScheduleResponse response = scheduleService.create(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ScheduleResponse>> findAllSchedule(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending());
+        Page<ScheduleResponse> responses = scheduleService.findAllSchedules(pageable);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
     @GetMapping("/{scheduleId}")

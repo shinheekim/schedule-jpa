@@ -11,6 +11,8 @@ import com.example.springjpa.user.domain.User;
 import com.example.springjpa.user.domain.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,12 @@ public class ScheduleService {
         userScheduleRepository.save(userSchedule);
 
         return ScheduleResponse.from(schedule);
+    }
+
+
+    public Page<ScheduleResponse> findAllSchedules(Pageable pageable) {
+        return scheduleRepository.findAll(pageable)
+                .map(ScheduleResponse::from);
     }
 
     public ScheduleResponse findOne(Long id) {
