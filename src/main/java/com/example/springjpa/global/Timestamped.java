@@ -1,4 +1,4 @@
-package com.example.global;
+package com.example.springjpa.global;
 
 import jakarta.persistence.*;
 import lombok.Getter;
