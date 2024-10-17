@@ -31,5 +31,25 @@
 - 회원 탈퇴(토큰 확인)
   ![image](https://github.com/user-attachments/assets/602edcde-3323-445e-9e93-eae92b18426e)
 ### Schedule
+조건
+- [ ]  유저에 `권한`을 추가합니다.
+- [ ]  권한은 `관리자`, `일반 사용자` 두 가지가 존재합니다.
+- [ ]  JWT를 발급할 때 유저의 권한 정보를 함께 넣어줍니다.
+- [ ]  일정 수정 및 삭제는 `관리자` 권한이 있는 유저만 할 수 있습니다.
+따라서 일정을 생성한 creator는 수정, 삭제가 불가하고 관리자만 수정, 삭제할 수 있도록 설정했음.
 
+- 일정 등록
+  ![image](https://github.com/user-attachments/assets/daa8af62-5f02-4694-b870-120ec3a5d61c)
+- 일정 전체 조회
+  ![image](https://github.com/user-attachments/assets/a475202d-6f55-4004-9d34-ee232b6f09ca)
+- 일정 개별 조회
+  ![image](https://github.com/user-attachments/assets/c487f169-439e-4a47-9ef4-bdb1eb1b56f3)
+- 일정 수정 성공(ROLE_ADMIN 일때만 수정 가능)
+  ![image](https://github.com/user-attachments/assets/c7e0776f-1177-467a-9cd3-b3d5cb5d7ed6)
+- 일정 수정 실패 예시
+  ![image](https://github.com/user-attachments/assets/f5505d9e-3e98-4ddd-bca6-46c711bf671d)
+- 일정 삭제(ROLE_ADMIN 일때만 삭제 가능)
+  ![image](https://github.com/user-attachments/assets/df28873d-96bc-4a95-a156-39f04436e01c)
+- 일정 삭제 실패 예시
+  ![image](https://github.com/user-attachments/assets/8b354e2d-423e-43ee-b2df-0da15fca4c46)
 ### Comment
