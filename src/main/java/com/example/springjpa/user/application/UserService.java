@@ -48,20 +48,16 @@ public class UserService {
             throw new InvalidCredentialsException("비밀번호가 일치하지 않습니다.");
         }
 
-        return tokenProvider.createToken(user.getName(), user.getRole());
+        return tokenProvider.createToken(String.valueOf(user.getId()), user.getRole());
     }
 
-    public UserResponse findOneUser(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage())
-        );
+    public UserResponse findOneUser(Long id) {
+        User user = findUserById(id);
         return UserResponse.from(user);
     }
 
-    public void update(String email, UserUpdateRequest request) {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage())
-        );
+    public void update(Long id, UserUpdateRequest request) {
+        User user = findUserById(id);
         if (!passwordEncoder.matches(request.password(), user.getPassword())) {
             throw new InvalidCredentialsException("비밀번호가 일치하지 않습니다.");
         }
@@ -69,10 +65,13 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void delete(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage())
-        );
+    public void delete(Long id) {
+        User user = findUserById(id);
         userRepository.delete(user);
+    }
+
+    private User findUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
     }
 }

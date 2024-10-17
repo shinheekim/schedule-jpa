@@ -12,8 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -48,12 +46,12 @@ public class TokenProvider {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String createToken(String email, Role role) {
+    public String createToken(String userId, Role role) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(email) // 사용자 식별자값(ID)
+                        .setSubject(userId) // 사용자 식별자값(ID)
                         .claim(AUTHORIZATION_KEY, role)
                         .setExpiration(new Date(date.getTime() + TOKEN_TIME))
                         .setIssuedAt(date)
@@ -113,13 +111,13 @@ public class TokenProvider {
                 .getBody();
     }
 
-    public String getEmailFromToken(String token) {
+    public Long getUserIdFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-        return claims.getSubject();
+        return Long.parseLong(claims.getSubject());
     }
 
     public String getTokenFromRequest(HttpServletRequest req) {

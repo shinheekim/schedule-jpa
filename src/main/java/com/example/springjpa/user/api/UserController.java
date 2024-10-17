@@ -6,7 +6,6 @@ import com.example.springjpa.user.api.dto.request.UserSaveRequest;
 import com.example.springjpa.user.api.dto.request.UserUpdateRequest;
 import com.example.springjpa.user.api.dto.response.UserResponse;
 import com.example.springjpa.user.application.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,8 +39,8 @@ public class UserController {
     public ResponseEntity<UserResponse> findOneUser(
         @CookieValue(value = AUTHORIZATION_HEADER) String tokenValue) {
         try {
-            String email = tokenProvider.getEmailFromToken(tokenValue);
-            UserResponse response = userService.findOneUser(email);
+            Long id = tokenProvider.getUserIdFromToken(tokenValue);
+            UserResponse response = userService.findOneUser(id);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -53,8 +52,8 @@ public class UserController {
             @CookieValue(value = AUTHORIZATION_HEADER) String tokenValue,
             @RequestBody(required = false) UserUpdateRequest request) {
         try {
-            String email = tokenProvider.getEmailFromToken(tokenValue);
-            userService.update(email, request);
+            Long id = tokenProvider.getUserIdFromToken(tokenValue);
+            userService.update(id, request);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -64,8 +63,8 @@ public class UserController {
     @DeleteMapping
     public ResponseEntity<String> deleteUser(@CookieValue(value = AUTHORIZATION_HEADER) String tokenValue) {
         try {
-            String email = tokenProvider.getEmailFromToken(tokenValue);
-            userService.delete(email);
+            Long id = tokenProvider.getUserIdFromToken(tokenValue);
+            userService.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
