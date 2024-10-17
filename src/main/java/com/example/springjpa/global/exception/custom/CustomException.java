@@ -1,5 +1,6 @@
-package com.example.springjpa.global.exception;
+package com.example.springjpa.global.exception.custom;
 
+import com.example.springjpa.global.exception.ErrorCode;
 import lombok.Getter;
 
 @Getter
