@@ -112,10 +112,11 @@ public class TokenProvider {
     }
 
     public Long getUserIdFromToken(String token) {
+        String realToken = substringToken(token);
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(realToken)
                 .getBody();
         return Long.parseLong(claims.getSubject());
     }

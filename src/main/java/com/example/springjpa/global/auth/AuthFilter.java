@@ -44,7 +44,7 @@ public class AuthFilter implements Filter {
 
                 Claims info = tokenProvider.getUserInfoFromToken(token);
 
-                User user = userRepository.findByEmail(info.getSubject()).orElseThrow(() ->
+                User user = userRepository.findById(Long.valueOf(info.getSubject())).orElseThrow(() ->
                         new NullPointerException("Not Found User")
                 );
 
