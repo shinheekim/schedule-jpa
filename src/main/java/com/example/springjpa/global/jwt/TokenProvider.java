@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -26,7 +28,8 @@ import java.util.Date;
 @RequiredArgsConstructor
 @Component
 public class TokenProvider {
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+    @Value("${jwt.header}")
+    public String AUTHORIZATION_HEADER;
 
     @Value("${jwt.access-token-validity-in-milliseconds}")
     private long TOKEN_TIME;
@@ -110,9 +113,26 @@ public class TokenProvider {
                 .getBody();
     }
 
+    public String getEmailFromCookie(HttpServletRequest request) throws Exception {
+        String token = getTokenFromRequest(request);
+        if (token == null || !validateToken(token)) {
+            throw new IllegalArgumentException("JWT 토큰 인증에 실패하였습니다.");
+        }
+        return getEmailFromToken(token);
+    }
+
+    public String getEmailFromToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.getSubject();
+    }
+
     public String getTokenFromRequest(HttpServletRequest req) {
         Cookie[] cookies = req.getCookies();
-        if(cookies != null) {
+        if (cookies != null) {
             for (Cookie cookie : cookies) {
                 if (cookie.getName().equals(AUTHORIZATION_HEADER)) {
                     try {

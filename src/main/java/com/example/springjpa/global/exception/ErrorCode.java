@@ -16,6 +16,7 @@ public enum ErrorCode {
      * 404 NOT FOUND
      */
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 유저가 없습니다."),
+    USER_ALREADY_EXIST(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
     INVALID_NICKNAME(HttpStatus.BAD_REQUEST, "닉네임 형식이 올바르지 않습니다."),
     /**
      * 500 INTERNAL SERVER ERROR

@@ -6,6 +6,7 @@ import com.example.springjpa.user.api.dto.request.UserSaveRequest;
 import com.example.springjpa.user.api.dto.request.UserUpdateRequest;
 import com.example.springjpa.user.api.dto.response.UserResponse;
 import com.example.springjpa.user.application.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,26 +30,41 @@ public class UserController {
     @GetMapping("/login")
     public ResponseEntity<String> loginUser(@RequestBody @Valid UserLoginRequest request,
                                             HttpServletResponse response) {
-        String token = userService.loginAndToken(request);
+        String token = userService.loginAndGetToken(request);
         tokenProvider.addJwtToCookie(token, response);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserResponse> findOneUser(@PathVariable("userId") Long id) {
-        UserResponse response = userService.findOneUser(id);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<UserResponse> findOneUser(HttpServletRequest httpServletRequest) {
+        try {
+            String email = tokenProvider.getEmailFromCookie(httpServletRequest);
+            UserResponse response = userService.findOneUser(email);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
-    @PatchMapping("/{userId}")
-    public ResponseEntity<String> updateUser(@PathVariable("userId") Long id,
+    @PatchMapping
+    public ResponseEntity<String> updateUser(HttpServletRequest httpServletRequest,
                                              @RequestBody(required = false) UserUpdateRequest request) {
-        userService.update(id, request);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            String email = tokenProvider.getEmailFromCookie(httpServletRequest);
+            userService.update(email, request);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable("userId") Long id) {
-        userService.delete(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    @DeleteMapping
+    public ResponseEntity<String> deleteUser(HttpServletRequest httpServletRequest) {
+        try {
+            String email = tokenProvider.getEmailFromCookie(httpServletRequest);
+            userService.delete(email);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }

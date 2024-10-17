@@ -2,17 +2,15 @@ package com.example.springjpa.user.application;
 
 import com.example.springjpa.global.exception.ErrorCode;
 import com.example.springjpa.global.exception.InvalidCredentialsException;
-import com.example.springjpa.global.exception.NotFoundException;
 import com.example.springjpa.global.exception.UserNotFoundException;
 import com.example.springjpa.global.jwt.TokenProvider;
 import com.example.springjpa.user.api.dto.request.UserLoginRequest;
-import com.example.springjpa.user.api.dto.response.UserResponse;
 import com.example.springjpa.user.api.dto.request.UserSaveRequest;
 import com.example.springjpa.user.api.dto.request.UserUpdateRequest;
+import com.example.springjpa.user.api.dto.response.UserResponse;
 import com.example.springjpa.user.domain.Role;
 import com.example.springjpa.user.domain.User;
 import com.example.springjpa.user.domain.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,8 +25,8 @@ public class UserService {
     private final TokenProvider tokenProvider;
 
     public UserResponse join(UserSaveRequest request) {
-        if (!userRepository.existsByEmail(request.email())) {
-            throw new UserNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage());
+        if (userRepository.existsByEmail(request.email())) {
+            throw new UserNotFoundException(ErrorCode.USER_ALREADY_EXIST.getMessage());
         }
 
         User user = User.builder()
@@ -42,7 +40,7 @@ public class UserService {
         return UserResponse.from(user);
     }
 
-    public String loginAndToken(UserLoginRequest request) {
+    public String loginAndGetToken(UserLoginRequest request) {
         User user = userRepository.findByEmail(request.email()).orElseThrow(
                 () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage()));
 
@@ -53,26 +51,28 @@ public class UserService {
         return tokenProvider.createToken(user.getName(), user.getRole());
     }
 
-    public UserResponse findOneUser(Long id) {
-        User user = findUserById(id);
+    public UserResponse findOneUser(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage())
+        );
         return UserResponse.from(user);
     }
 
-    public void update(Long id, UserUpdateRequest request) {
-        User user = findUserById(id);
-//        if (user.isValidPassword(request.password())) - update, delete 모두 password 일치하는지 확인하는 로직
-        // (boolean) passwordEncoder.matches(input, encode)
+    public void update(String email, UserUpdateRequest request) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage())
+        );
+        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
+            throw new InvalidCredentialsException("비밀번호가 일치하지 않습니다.");
+        }
         user.update(request.name(), request.email());
         userRepository.save(user);
     }
 
-    public void delete(Long id) {
-        User user = findUserById(id);
+    public void delete(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new UserNotFoundException(ErrorCode.USER_NOT_FOUND.getMessage())
+        );
         userRepository.delete(user);
-    }
-
-    private User findUserById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 유저가 존재하지 않습니다."));
     }
 }
