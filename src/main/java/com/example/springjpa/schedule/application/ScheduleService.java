@@ -1,5 +1,6 @@
 package com.example.springjpa.schedule.application;
 
+import com.example.springjpa.global.exception.custom.InvalidCredentialsException;
 import com.example.springjpa.schedule.api.dto.ScheduleUpdateRequest;
 import com.example.springjpa.schedule.api.dto.request.ScheduleSaveRequest;
 import com.example.springjpa.schedule.api.dto.response.ScheduleResponse;
@@ -7,9 +8,10 @@ import com.example.springjpa.schedule.domain.Schedule;
 import com.example.springjpa.schedule.domain.UserSchedule;
 import com.example.springjpa.schedule.domain.repository.ScheduleRepository;
 import com.example.springjpa.schedule.domain.repository.UserScheduleRepository;
+import com.example.springjpa.schedule.exception.ScheduleNotFoundException;
 import com.example.springjpa.user.domain.User;
 import com.example.springjpa.user.domain.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+import com.example.springjpa.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,8 +30,8 @@ public class ScheduleService {
     private final UserRepository userRepository;
     private final UserScheduleRepository userScheduleRepository;
 
-    public ScheduleResponse create(ScheduleSaveRequest request) {
-        User creator = userRepository.findById(request.userId())
+    public ScheduleResponse create(Long id, ScheduleSaveRequest request) {
+        User creator = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("유저가 존재하지 않습니다."));
 
         Schedule schedule = Schedule.builder()
@@ -46,7 +48,7 @@ public class ScheduleService {
     }
 
 
-    public List<ScheduleResponse> findAllSchedules(Pageable pageable) {
+    public List<ScheduleResponse> findAllByPage(Pageable pageable) {
         Page<Schedule> schedules = scheduleRepository.findAll(pageable);
 
         return schedules.stream()
@@ -65,15 +67,22 @@ public class ScheduleService {
         scheduleRepository.save(schedule);
     }
 
+    /**
+     * 일정을 작성한 유저는 추가로 일정 담당 유저들을 배치할 수 있습니다.
+     */
+    public void assignUsersToSchedule(Long id, Long userId, Set<Long> userIds) {
+        Schedule schedule = findScheduleById(id);
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new UserNotFoundException("해당 유저를 찾을 수 없습니다."));
 
-    public void assignUsersToSchedule(Long scheduleId, Set<Long> userIds) {
-        Schedule schedule = scheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 일정을 찾을 수 없습니다."));
+        if (!schedule.isCreator(user)) {
+            throw new InvalidCredentialsException("일정을 생성한 유저만 일정 관리 유저를 설정할 수 있습니다.");
+        }
 
         Set<User> usersToAssign = new HashSet<>(userRepository.findAllById(userIds));
 
-        for (User user : usersToAssign) {
-            UserSchedule userSchedule = new UserSchedule(schedule, user);
+        for (User allocatedUser : usersToAssign) {
+            UserSchedule userSchedule = new UserSchedule(schedule, allocatedUser);
             userScheduleRepository.save(userSchedule);
         }
     }
@@ -85,6 +94,6 @@ public class ScheduleService {
 
     private Schedule findScheduleById(Long id) {
         return scheduleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("해당 일정이 존재하지 않습니다."));
+                .orElseThrow(() -> new ScheduleNotFoundException("해당 일정이 존재하지 않습니다."));
     }
 }

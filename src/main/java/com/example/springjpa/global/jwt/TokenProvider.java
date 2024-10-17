@@ -1,7 +1,8 @@
 package com.example.springjpa.global.jwt;
 
-import com.example.springjpa.global.exception.ExpiredTokenException;
-import com.example.springjpa.global.exception.TokenMissingException;
+import com.example.springjpa.global.exception.custom.ExpiredTokenException;
+import com.example.springjpa.global.exception.custom.InvalidJwtException;
+import com.example.springjpa.global.exception.custom.TokenMissingException;
 import com.example.springjpa.user.domain.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -89,11 +90,13 @@ public class TokenProvider {
             return true;
         } catch (SecurityException | MalformedJwtException | SignatureException e) {
             log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+            throw new InvalidJwtException("유효하지 않는 JWT 서명 입니다.");
         } catch (ExpiredJwtException e) {
             log.error("Expired JWT token, 만료된 JWT token 입니다.");
             throw new ExpiredTokenException("만료된 토큰입니다.");
         } catch (UnsupportedJwtException e) {
             log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+            throw new UnsupportedJwtException("지원되지 않는 JWT 토큰 입니다.");
         } catch (IllegalArgumentException e) {
             log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다(null or empty).");
             throw new TokenMissingException("토큰이 비어있습니다.");
@@ -119,6 +122,16 @@ public class TokenProvider {
                 .parseClaimsJws(realToken)
                 .getBody();
         return Long.parseLong(claims.getSubject());
+    }
+
+    public boolean isUserAuthorizedWithToken(String token) {
+        String realToken = substringToken(token);
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(realToken)
+                .getBody();
+        return Role.valueOf(claims.get(AUTHORIZATION_KEY, String.class)).equals(Role.ROLE_ADMIN);
     }
 
     public String getTokenFromRequest(HttpServletRequest req) {
