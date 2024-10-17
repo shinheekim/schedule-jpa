@@ -50,4 +50,8 @@ public class Schedule extends Timestamped {
             this.content = content;
         }
     }
+
+    public boolean isCreator(User user) {
+        return this.creator == user;
+    }
 }
