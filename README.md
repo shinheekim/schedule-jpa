@@ -16,6 +16,13 @@
 
 # 사용 기술 스택
 # API 명세서
+- Schedule
+- ![image](https://github.com/user-attachments/assets/516c89be-438f-4be2-82ab-d5f44aa4f865)
+- User 
+- 개별조회, 수정, 삭제 시 해당 user정보의 주인이여야 함.
+- ![image](https://github.com/user-attachments/assets/fe5efa21-f689-4087-a08f-f3d4165b239b)
+- Comment
+- ![image](https://github.com/user-attachments/assets/a116fe20-7e87-4423-b5c8-dd7a32310bee)
 # ERD
 ![image](https://github.com/user-attachments/assets/1b17e53f-8e5e-4299-a00a-f3de0be80c84)
 # API TEST
