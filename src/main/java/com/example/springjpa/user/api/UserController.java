@@ -36,37 +36,24 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<UserResponse> findOneUser(
-        @CookieValue(value = AUTHORIZATION_HEADER) String tokenValue) {
-        try {
-            Long userId = tokenProvider.getUserIdFromToken(tokenValue);
-            UserResponse response = userService.findOneUser(userId);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+    public ResponseEntity<UserResponse> findOneUser(@CookieValue(value = AUTHORIZATION_HEADER) String tokenValue) {
+        Long userId = tokenProvider.getUserIdFromToken(tokenValue);
+        UserResponse response = userService.findOneUser(userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PatchMapping
     public ResponseEntity<String> updateUser(@CookieValue(value = AUTHORIZATION_HEADER) String tokenValue,
                                              @RequestBody(required = false) UserUpdateRequest request) {
-        try {
-            Long userId = tokenProvider.getUserIdFromToken(tokenValue);
-            userService.update(userId, request);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        Long userId = tokenProvider.getUserIdFromToken(tokenValue);
+        userService.update(userId, request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping
     public ResponseEntity<String> deleteUser(@CookieValue(value = AUTHORIZATION_HEADER) String tokenValue) {
-        try {
-            Long userId = tokenProvider.getUserIdFromToken(tokenValue);
-            userService.delete(userId);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        Long userId = tokenProvider.getUserIdFromToken(tokenValue);
+        userService.delete(userId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

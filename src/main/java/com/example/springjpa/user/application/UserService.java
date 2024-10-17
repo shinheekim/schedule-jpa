@@ -1,8 +1,8 @@
 package com.example.springjpa.user.application;
 
 import com.example.springjpa.global.exception.ErrorCode;
-import com.example.springjpa.global.exception.InvalidCredentialsException;
-import com.example.springjpa.global.exception.UserNotFoundException;
+import com.example.springjpa.global.exception.custom.InvalidCredentialsException;
+import com.example.springjpa.user.exception.UserNotFoundException;
 import com.example.springjpa.global.jwt.TokenProvider;
 import com.example.springjpa.user.api.dto.request.UserLoginRequest;
 import com.example.springjpa.user.api.dto.request.UserSaveRequest;
