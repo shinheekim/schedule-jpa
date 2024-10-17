@@ -18,11 +18,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
 public class UserController {
+    public static final String AUTHORIZATION_HEADER = "Authorization";
     private final UserService userService;
     private final TokenProvider tokenProvider;
 
     @PostMapping
-    public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserSaveRequest request){
+    public ResponseEntity<UserResponse> createUser(@RequestBody @Valid UserSaveRequest request) {
         UserResponse response = userService.join(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
@@ -36,20 +37,23 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<UserResponse> findOneUser(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<UserResponse> findOneUser(
+        @CookieValue(value = AUTHORIZATION_HEADER) String tokenValue) {
         try {
-            String email = tokenProvider.getEmailFromCookie(httpServletRequest);
+            String email = tokenProvider.getEmailFromToken(tokenValue);
             UserResponse response = userService.findOneUser(email);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
     @PatchMapping
-    public ResponseEntity<String> updateUser(HttpServletRequest httpServletRequest,
-                                             @RequestBody(required = false) UserUpdateRequest request) {
+    public ResponseEntity<String> updateUser(
+            @CookieValue(value = AUTHORIZATION_HEADER) String tokenValue,
+            @RequestBody(required = false) UserUpdateRequest request) {
         try {
-            String email = tokenProvider.getEmailFromCookie(httpServletRequest);
+            String email = tokenProvider.getEmailFromToken(tokenValue);
             userService.update(email, request);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
@@ -58,9 +62,9 @@ public class UserController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteUser(HttpServletRequest httpServletRequest) {
+    public ResponseEntity<String> deleteUser(@CookieValue(value = AUTHORIZATION_HEADER) String tokenValue) {
         try {
-            String email = tokenProvider.getEmailFromCookie(httpServletRequest);
+            String email = tokenProvider.getEmailFromToken(tokenValue);
             userService.delete(email);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {

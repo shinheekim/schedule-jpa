@@ -113,14 +113,6 @@ public class TokenProvider {
                 .getBody();
     }
 
-    public String getEmailFromCookie(HttpServletRequest request) throws Exception {
-        String token = getTokenFromRequest(request);
-        if (token == null || !validateToken(token)) {
-            throw new IllegalArgumentException("JWT 토큰 인증에 실패하였습니다.");
-        }
-        return getEmailFromToken(token);
-    }
-
     public String getEmailFromToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
