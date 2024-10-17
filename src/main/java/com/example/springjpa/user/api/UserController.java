@@ -39,35 +39,34 @@ public class UserController {
     public ResponseEntity<UserResponse> findOneUser(
         @CookieValue(value = AUTHORIZATION_HEADER) String tokenValue) {
         try {
-            Long id = tokenProvider.getUserIdFromToken(tokenValue);
-            UserResponse response = userService.findOneUser(id);
+            Long userId = tokenProvider.getUserIdFromToken(tokenValue);
+            UserResponse response = userService.findOneUser(userId);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
     @PatchMapping
-    public ResponseEntity<String> updateUser(
-            @CookieValue(value = AUTHORIZATION_HEADER) String tokenValue,
-            @RequestBody(required = false) UserUpdateRequest request) {
+    public ResponseEntity<String> updateUser(@CookieValue(value = AUTHORIZATION_HEADER) String tokenValue,
+                                             @RequestBody(required = false) UserUpdateRequest request) {
         try {
-            Long id = tokenProvider.getUserIdFromToken(tokenValue);
-            userService.update(id, request);
+            Long userId = tokenProvider.getUserIdFromToken(tokenValue);
+            userService.update(userId, request);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
     @DeleteMapping
     public ResponseEntity<String> deleteUser(@CookieValue(value = AUTHORIZATION_HEADER) String tokenValue) {
         try {
-            Long id = tokenProvider.getUserIdFromToken(tokenValue);
-            userService.delete(id);
+            Long userId = tokenProvider.getUserIdFromToken(tokenValue);
+            userService.delete(userId);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 }
