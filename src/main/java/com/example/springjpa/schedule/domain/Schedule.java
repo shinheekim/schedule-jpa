@@ -34,6 +34,8 @@ public class Schedule extends Timestamped {
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    private String weather;
+
     @Builder
     public Schedule(Long id, User creator, String title, String content) {
         this.id = id;
@@ -53,5 +55,9 @@ public class Schedule extends Timestamped {
 
     public boolean isCreator(User user) {
         return this.creator == user;
+    }
+
+    public void setWeather(String weather) {
+        this.weather = weather;
     }
 }

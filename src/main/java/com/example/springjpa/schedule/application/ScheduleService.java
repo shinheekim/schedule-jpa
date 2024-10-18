@@ -12,6 +12,7 @@ import com.example.springjpa.schedule.exception.ScheduleNotFoundException;
 import com.example.springjpa.user.domain.User;
 import com.example.springjpa.user.domain.repository.UserRepository;
 import com.example.springjpa.user.exception.UserNotFoundException;
+import com.example.springjpa.weather.application.WeatherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
     private final UserScheduleRepository userScheduleRepository;
+    private final WeatherService weatherService;
 
     public ScheduleResponse create(Long id, ScheduleSaveRequest request) {
         User creator = userRepository.findById(id)
@@ -39,6 +41,10 @@ public class ScheduleService {
                 .content(request.content())
                 .creator(creator)
                 .build();
+
+        String weather = weatherService.getWeatherForCreatedAt(schedule.getCreatedAt());
+        schedule.setWeather(weather);
+
         scheduleRepository.save(schedule);
 
         UserSchedule userSchedule = new UserSchedule(schedule, creator);

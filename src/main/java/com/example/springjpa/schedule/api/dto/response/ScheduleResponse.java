@@ -11,6 +11,7 @@ public record ScheduleResponse(
         String title,
         String content,
         int commentNums,
+        String weather,
         LocalDateTime createAt,
         LocalDateTime modifiedAt,
         String creator
@@ -21,6 +22,7 @@ public record ScheduleResponse(
                 .title(schedule.getTitle())
                 .content(schedule.getContent())
                 .commentNums(schedule.getComments().size())
+                .weather(schedule.getWeather())
                 .createAt(schedule.getCreatedAt())
                 .modifiedAt(schedule.getModifiedAt())
                 .creator(schedule.getCreator().getName())
